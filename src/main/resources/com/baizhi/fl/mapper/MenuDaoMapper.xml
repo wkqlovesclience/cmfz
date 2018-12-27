@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.fl.dao.MenuDao">
+
+    <!--手动映射-->
+   <resultMap id="myMenu" type="com.baizhi.fl.entity.Menu">
+        <id property="id" column="pid"/>
+        <result property="title" column="ptitle"/>
+        <result property="iconCls" column="piconCls"/>
+        <result property="href" column="phref"/>
+        <collection property="children" ofType="com.baizhi.fl.entity.Menu">
+            <id property="id" column="cid"/>
+             <result property="href" column="chref"/>
+             <result property="iconCls" column="ciconCls"/>
+             <result property="title" column="ctitle"/>
+        </collection>
+   </resultMap>
+
+
+<!--查所有  表连接-->
+<select id="selectAllMenu" resultMap="myMenu">
+  select p.id pid,p.title ptitle,p.href phref,p.iconCls piconCls,
+     c.id cid,c.href chref,c.iconCls ciconCls,c.title ctitle,
+     c.parentId cparentId
+    from menu p join menu c
+   on p.id=c.parentId
+</select>
+
+    <!--查所有  不用表连接-->
+    <select id="selectAll" resultType="com.baizhi.fl.entity.Menu">
+        select * from menu where parentId is null
+    </select>
+
+
+<select id="selectOne" parameterType="String" resultType="com.baizhi.fl.entity.Menu">
+     select id,title,href,iconCls  from menu where id=#{id}
+</select>
+
+</mapper>

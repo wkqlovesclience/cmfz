@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.fl.dao.AlbumDao">
+
+    <!--手动映射-->
+    <resultMap id="myAlbum" type="com.baizhi.fl.entity.Album">
+        <id column="aid" property="id"/>
+        <result column="aname" property="name"/>
+        <result column="score" property="score"/>
+        <result column="author" property="author"/>
+        <result column="broadcast" property="broadcast"/>
+        <result column="count" property="count"/>
+        <result column="description" property="description"/>
+        <result column="publishTime" property="publishTime"/>
+        <!--关系属性-->
+        <collection property="children" ofType="com.baizhi.fl.entity.Chapter">
+            <id column="cid" property="id"/>
+            <result column="cname" property="name"/>
+            <result column="size" property="size"/>
+            <result column="url" property="url"/>
+            <result column="times" property="times"/>
+            <result column="createTime" property="createTime"/>
+            <result column="albumId" property="albumId"/>
+            <result column="length" property="length"/>
+        </collection>
+    </resultMap>
+
+            <!--查所有-->
+        <select id="selectAllAlbum" resultMap="myAlbum">
+           select a.id aid, a.name aname,score,author,broadcast,description,publishTime,
+            c.id cid,c.name cname,size,url,length,times,createTime,albumId
+             from
+            album a join chapter c
+            on a.id=c.albumId
+            limit #{page},#{rows}
+        </select>
+        <!--查数据的总条数-->
+    <select id="selectAllCount" resultType="int">
+        select count(*)
+        from(
+        select a.id aid, a.name aname,score,author,broadcast,description,publishTime,
+                    c.id cid,c.name cname,size,url,length,times,createTime,albumId
+             from
+            album a join chapter c
+            on a.id=c.albumId) tb
+
+    </select>
+
+    <!--查一个-->
+    <select id="selectOneById" parameterType="String" resultType="com.baizhi.fl.entity.Album">
+        select id,name,score,author,broadcast,count,description,publishTime from album
+        where id=#{id}
+    </select>
+    <!--添加专辑-->
+    <insert id="insertAlbum" parameterType="com.baizhi.fl.entity.Album">
+        insert into album values(#{id},#{name},#{score},#{author},#{broadcast},#{count},#{description},#{publishTime})
+    </insert>
+    <!--查所有 单表 添加章节使用-->
+    <select id="selectAll" resultType="com.baizhi.fl.entity.Album">
+        select id,name,score,author,broadcast,count,description,publishTime from album
+    </select>
+
+
+</mapper>

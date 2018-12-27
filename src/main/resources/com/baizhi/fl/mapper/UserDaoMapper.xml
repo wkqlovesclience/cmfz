@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.fl.dao.UserDao">
+
+    <!--查所有-->
+    <select id="selectAllUser" resultType="com.baizhi.fl.entity.User">
+        select id ,name,dharmName,photo,phoneNum,password,sex,province,city,sign,status,salt,createTime from user
+          order by id
+    </select>
+
+
+    <!--查所有 分页-->
+   <select id="selectAllUserBySplit" resultType="com.baizhi.fl.entity.User">
+        select id ,name,dharmName,photo,phoneNum,password,sex,province,city,sign,status,salt,createTime from user
+        limit #{page},#{rows}
+   </select>
+
+    <!--查询用户数据的总条数-->
+    <select id="selectAllUserCount" parameterType="int" resultType="int">
+         select  count(*) from user
+
+    </select>
+
+
+    <!--根据时间 查询一个星期以内 用户活跃 的数量-->
+    <select id="selectAllUserByDay" resultType="int">
+        <![CDATA[
+          select  count(*) from user
+        where to_days(now())-to_days(createTime)<=7
+
+        ]]>
+    </select>
+
+    <!--根据时间 查询1个月以内 用户活跃 的数量-->
+    <select id="selectAllUserByOneMoth" resultType="int">
+        <![CDATA[
+          select  count(*) from user
+        where to_days(now())-to_days(createTime)<=30
+
+        ]]>
+    </select>
+    <!--根据时间 查询2个月以内 用户活跃 的数量-->
+    <select id="selectAllUserByTwoMoth" resultType="int">
+        <![CDATA[
+         select  count(*) from user
+        where to_days(now())-to_days(createTime)<=60
+
+        ]]>
+    </select>
+    <!--根据时间 查询3个月以内 用户活跃 的数量-->
+    <select id="selectAllUserByThreeMoth" resultType="int">
+      <![CDATA[
+          select  count(*) from user
+        where to_days(now())-to_days(createTime)<=90
+
+        ]]>
+    </select>
+
+    <!--查所有男用户 根据用户所在的省-->
+    <select id="selectAllManByProvince" parameterType="String" resultType="com.baizhi.fl.entity.UserDto">
+     select count(*) value,province name from user
+        where province=#{province} and sex="男"
+        group by province
+    </select>
+
+    <!--查所有女用户 根据用户所在的省-->
+    <select id="selectAllWomanByProvince" parameterType="String" resultType="com.baizhi.fl.entity.UserDto">
+        select count(*) value,province name from user
+        where province=#{province} and sex="女"
+        group by province
+    </select>
+
+<!--添加用户 表格导入使用-->
+    <insert id="insertUser" parameterType="com.baizhi.fl.entity.User">
+ insert into user values(#{id},#{name},#{dharmName},#{photo},#{phoneNum},#{password},#{sex},#{province},#{city},#{sign},#{status},#{salt},#{createTime})
+    </insert>
+
+
+
+
+
+</mapper>

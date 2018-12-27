@@ -1,0 +1,24 @@
+server:
+  port: 9000
+  context-path: /cmfz
+  jsp-servlet:
+    init-parameters:
+      development: true
+spring:
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 606123
+    url: jdbc:mysql://localhost:3306/cmfz
+  http:
+    encoding:
+      charset: UTF-8
+    multipart:
+      max-file-size: 100MB
+mybatis:
+  mapper-locations: classpath*:com/baizhi/fl/mapper/*Mapper.xml
+  type-aliases-package: com.baizhi.fl.entity
